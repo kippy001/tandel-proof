@@ -1,0 +1,104 @@
+{
+  "_version": "ledger-v1",
+  "_comment": "Single source of truth for the U-VCT Scorecard. Seeded from the frozen Stage 0 template (canonical_source.html). All seed rows carry integrity.scheme=illustrative-snapshot-v0 (legacy compute_snapshot_hash or seed placeholder) and are shown as illustrative, never verified. New rows use toon-sha256-v1 once enhancement #5 computes real digests. Stats are derived in Stage 2; do not store them here. Append-only: never delete or rescore a row.",
+  "rows": [
+    {
+      "run_id": "RUN-20260328-UAN-b71c0fd9",
+      "ticker": "UAN", "opened": "2026-03-28", "closed": "2026-04-04",
+      "structure": "put debit (OVERRIDE: Hormuz)", "tier": "T5", "state": "closed",
+      "entry_edge_pt": 13.1, "pl": 520, "result": "win", "commit": "3d8e1f2",
+      "integrity": { "scheme": "illustrative-snapshot-v0", "value": "b71c0fd9a2e4__seed1", "engine_version": null, "canonicalization": null }
+    },
+    {
+      "run_id": "RUN-20260328-LNG-7c2d9b04",
+      "ticker": "LNG", "opened": "2026-03-28", "closed": "2026-04-11",
+      "structure": "295/315 call debit spread", "tier": "T4", "state": "closed",
+      "entry_edge_pt": 7.4, "pl": 380, "result": "win", "commit": "3d8e1f2",
+      "integrity": { "scheme": "illustrative-snapshot-v0", "value": "7c2d9b04e8f1a330", "engine_version": null, "canonicalization": null }
+    },
+    {
+      "run_id": "RUN-20260402-XLE-1f8a3e6c",
+      "ticker": "XLE", "opened": "2026-04-02", "closed": "2026-04-18",
+      "structure": "call debit spread", "tier": "T3", "state": "closed",
+      "entry_edge_pt": 5.2, "pl": 190, "result": "win", "commit": "a14c7e9",
+      "integrity": { "scheme": "illustrative-snapshot-v0", "value": "1f8a3e6c5d0b9472", "engine_version": null, "canonicalization": null }
+    },
+    {
+      "run_id": "RUN-20260409-AMD-9d4b7a21",
+      "ticker": "AMD", "opened": "2026-04-09", "closed": "2026-05-16",
+      "structure": "175/185 bear call spread", "tier": "T4", "state": "closed",
+      "entry_edge_pt": 8.0, "pl": 295, "result": "win", "commit": "c92b04d",
+      "integrity": { "scheme": "illustrative-snapshot-v0", "value": "9d4b7a21c6e0f815", "engine_version": null, "canonicalization": null }
+    },
+    {
+      "run_id": "RUN-20260415-TSLA-ae0071f3",
+      "ticker": "TSLA", "opened": "2026-04-15",
+      "structure": "NO_TRADE (earnings in window)", "tier": "T1", "state": "closed",
+      "entry_edge_pt": 0.0, "pl": null, "result": "avoided", "commit": "ae0071f",
+      "integrity": { "scheme": "illustrative-snapshot-v0", "value": "ae0071f3b1568589", "engine_version": null, "canonicalization": null }
+    },
+    {
+      "run_id": "RUN-20260423-XLF-5e2c8a07",
+      "ticker": "XLF", "opened": "2026-04-23", "closed": "2026-05-02",
+      "structure": "44/46/50/52 iron condor", "tier": "T3", "state": "closed",
+      "entry_edge_pt": 4.6, "pl": -410, "result": "loss", "commit": "11d6f3a",
+      "integrity": { "scheme": "illustrative-snapshot-v0", "value": "5e2c8a07f9d3b461", "engine_version": null, "canonicalization": null }
+    },
+    {
+      "run_id": "RUN-20260428-MSFT-c30b9e14",
+      "ticker": "MSFT", "opened": "2026-04-28", "closed": "2026-05-09",
+      "structure": "bull put spread", "tier": "T3", "state": "closed",
+      "entry_edge_pt": 4.1, "pl": -180, "result": "loss", "commit": "6a2e90c",
+      "integrity": { "scheme": "illustrative-snapshot-v0", "value": "c30b9e14a7f25d88", "engine_version": null, "canonicalization": null }
+    },
+    {
+      "run_id": "RUN-20260502-XLE-2a9f6c08",
+      "ticker": "XLE", "opened": "2026-05-02", "closed": "2026-05-21",
+      "structure": "92/88 put debit spread", "tier": "T3", "state": "closed",
+      "entry_edge_pt": 5.0, "pl": 215, "result": "win", "commit": "2a42bf3",
+      "integrity": { "scheme": "illustrative-snapshot-v0", "value": "2a9f6c08d4e1b733", "engine_version": null, "canonicalization": null }
+    },
+    {
+      "run_id": "RUN-20260505-GLD-8b14d7e0",
+      "ticker": "GLD", "opened": "2026-05-05", "closed": "2026-05-20",
+      "structure": "call debit spread", "tier": "T2", "state": "closed",
+      "entry_edge_pt": 2.9, "pl": 95, "result": "win", "commit": "4c7d1e8",
+      "integrity": { "scheme": "illustrative-snapshot-v0", "value": "8b14d7e0a3c69f52", "engine_version": null, "canonicalization": null }
+    },
+    {
+      "run_id": "RUN-20260506-QQQ-f6fe13f0",
+      "ticker": "QQQ", "opened": "2026-05-06", "closed": "2026-05-18",
+      "structure": "bear call spread", "tier": "T4", "state": "closed",
+      "entry_edge_pt": 7.1, "pl": -240, "result": "loss", "commit": "f6fe13f",
+      "integrity": { "scheme": "illustrative-snapshot-v0", "value": "f6fe13f0b9a2c481", "engine_version": null, "canonicalization": null }
+    },
+    {
+      "run_id": "RUN-20260512-SMH-d0c3a7b8",
+      "ticker": "SMH", "opened": "2026-05-12", "closed": "2026-05-22",
+      "structure": "bear call spread", "tier": "T3", "state": "closed",
+      "entry_edge_pt": 5.5, "pl": 160, "result": "win", "commit": "7e0b4a1",
+      "integrity": { "scheme": "illustrative-snapshot-v0", "value": "d0c3a7b81e5f4926", "engine_version": null, "canonicalization": null }
+    },
+    {
+      "run_id": "RUN-20260527-NVDA-c4e1a8b9",
+      "ticker": "NVDA", "opened": "2026-05-27",
+      "structure": "152.50/162.50 bear call spread", "tier": "T4", "state": "open",
+      "status": "live", "commit": "9b3f0ac",
+      "integrity": { "scheme": "illustrative-snapshot-v0", "value": "c4e1a8b97f3d0e21", "engine_version": null, "canonicalization": null }
+    },
+    {
+      "run_id": "RUN-20260527-SMH-e07a5519",
+      "ticker": "SMH", "opened": "2026-05-27",
+      "structure": "230/240 bear call spread", "tier": "T3", "state": "open",
+      "status": "live", "commit": "9b3f0ac",
+      "integrity": { "scheme": "illustrative-snapshot-v0", "value": "e07a5519c2b8d144", "engine_version": null, "canonicalization": null }
+    },
+    {
+      "run_id": "RUN-20260530-MU-fed3eb41",
+      "ticker": "MU", "opened": "2026-05-30",
+      "structure": "NO_TRADE Tier-1 No-Edge (bull put 860/840 viable, min size)", "tier": "T1", "state": "closed",
+      "entry_edge_pt": 1.74, "pl": null, "result": "avoided", "commit": "20086ff",
+      "integrity": { "scheme": "toon-sha256-v1", "value": "71ea6f25083a285cae9903336587dbcbb5992dd5d29fd5618c0878c261ae9dcd", "engine_version": "u-vct-v4.1.0", "canonicalization": "uvct-toon-v1" }
+    }
+  ]
+}

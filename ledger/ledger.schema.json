@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kippy001/agentic-analytics-framework/ledger/ledger.schema.json",
+  "title": "U-VCT Scorecard ledger",
+  "description": "Single source of truth for the public Scorecard. Stats (hit rate, net edge, avg hold, counts) are DERIVED in Stage 2 and never stored here. HTML is generated, never hand-edited. Append-only: rows are added or transitioned open->closed, never deleted or rescored.",
+  "type": "object",
+  "required": ["_version", "rows"],
+  "additionalProperties": false,
+  "properties": {
+    "_version": { "const": "ledger-v1" },
+    "_comment": { "type": "string" },
+    "rows": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/row" }
+    }
+  },
+  "$defs": {
+    "row": {
+      "type": "object",
+      "required": ["run_id", "ticker", "opened", "structure", "tier", "state", "commit", "integrity"],
+      "additionalProperties": false,
+      "properties": {
+        "run_id": {
+          "type": "string",
+          "description": "Stable identity assigned at open. Public, append-only, never derived from the hash.",
+          "pattern": "^RUN-[0-9]{8}-[A-Z0-9.]{1,8}-[0-9a-z_]{8}$"
+        },
+        "ticker": { "type": "string", "minLength": 1, "maxLength": 8 },
+        "opened": { "type": "string", "format": "date", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+        "structure": { "type": "string", "minLength": 1 },
+        "tier": { "enum": ["T1", "T2", "T3", "T4", "T5"] },
+        "state": { "enum": ["open", "closed"] },
+        "commit": { "type": "string", "pattern": "^[0-9a-f]{7,40}$", "description": "Short SHA of the anchoring commit (open-anchor for open rows; close-anchor for closed)." },
+
+        "status": { "type": "string", "description": "Open-row liveness label, e.g. 'live'. Present only when state=open." },
+        "closed": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$", "description": "Present only when state=closed." },
+        "entry_edge_pt": { "type": "number", "description": "Edge differential in points captured at entry." },
+        "pl": { "type": ["number", "null"], "description": "Signed P/L. null for avoided rows (no trade taken)." },
+        "result": { "enum": ["win", "loss", "avoided"], "description": "Present only when state=closed. 'avoided' is excluded from the hit-rate denominator." },
+
+        "integrity": {
+          "type": "object",
+          "required": ["scheme", "value"],
+          "additionalProperties": false,
+          "properties": {
+            "scheme": {
+              "enum": ["illustrative-snapshot-v0", "toon-sha256-v1"],
+              "description": "v0 = legacy opaque snapshot hash, NOT independently verifiable, shown as illustrative. v1 = SHA-256 over the canonicalized TOON archive (see CANONICALIZATION.md), shown as verified."
+            },
+            "value": { "type": "string", "minLength": 1, "description": "v0: opaque legacy data-hash literal. v1: 64-char lowercase hex." },
+            "engine_version": { "type": ["string", "null"], "description": "uvct_engine version that produced the TOON. Required for v1; null permitted for v0." },
+            "canonicalization": { "type": ["string", "null"], "description": "Canonicalization profile id. 'uvct-toon-v1' for v1; null for v0." }
+          }
+        },
+
+        "signals": {
+          "type": "object",
+          "description": "Optional, additive, validated-if-present. Never required (keeps pre-M11 seed rows valid).",
+          "additionalProperties": false,
+          "properties": {
+            "sfs_alert": { "type": ["string", "null"] },
+            "forced_roll_probability": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+            "m11_ts_state": { "type": ["string", "null"] },
+            "catalyst_status": { "type": ["string", "null"] },
+            "sizing_multiplier": { "type": ["number", "null"], "minimum": 0 }
+          }
+        }
+      },
+
+      "allOf": [
+        {
+          "if": { "properties": { "state": { "const": "closed" } }, "required": ["state"] },
+          "then": {
+            "required": ["result", "entry_edge_pt"],
+            "not": { "required": ["status"] }
+          }
+        },
+        {
+          "comment": "win/loss are exited trades: require a close date and a numeric P/L.",
+          "if": { "properties": { "result": { "enum": ["win", "loss"] } }, "required": ["result"] },
+          "then": {
+            "required": ["closed", "pl"],
+            "properties": { "pl": { "type": "number" } }
+          }
+        },
+        {
+          "comment": "avoided = no trade taken: no close date, P/L is null. Render shows the close column as a dash.",
+          "if": { "properties": { "result": { "const": "avoided" } }, "required": ["result"] },
+          "then": {
+            "properties": { "pl": { "const": null } },
+            "not": { "required": ["closed"] }
+          }
+        },
+        {
+          "if": { "properties": { "state": { "const": "open" } } },
+          "then": {
+            "required": ["status"],
+            "not": { "anyOf": [ { "required": ["closed"] }, { "required": ["result"] }, { "required": ["pl"] } ] }
+          }
+        },
+        {
+          "if": { "properties": { "integrity": { "properties": { "scheme": { "const": "toon-sha256-v1" } }, "required": ["scheme"] } } },
+          "then": {
+            "properties": {
+              "integrity": {
+                "required": ["scheme", "value", "engine_version", "canonicalization"],
+                "properties": {
+                  "value": { "pattern": "^[0-9a-f]{64}$" },
+                  "engine_version": { "type": "string" },
+                  "canonicalization": { "const": "uvct-toon-v1" }
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

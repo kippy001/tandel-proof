@@ -1,0 +1,82 @@
+{
+  "tokens": [
+    {
+      "order": 0,
+      "name": "BUILD_META",
+      "kind": "scalar",
+      "captured_bytes": 21
+    },
+    {
+      "order": 1,
+      "name": "S_CLOSED_REC",
+      "kind": "scalar",
+      "captured_bytes": 20
+    },
+    {
+      "order": 2,
+      "name": "S_CLOSED_NOTE",
+      "kind": "scalar",
+      "captured_bytes": 22
+    },
+    {
+      "order": 3,
+      "name": "S_HITRATE",
+      "kind": "scalar",
+      "captured_bytes": 2
+    },
+    {
+      "order": 4,
+      "name": "S_NETEDGE_CLS",
+      "kind": "scalar",
+      "captured_bytes": 3
+    },
+    {
+      "order": 5,
+      "name": "S_NETEDGE",
+      "kind": "scalar",
+      "captured_bytes": 6
+    },
+    {
+      "order": 6,
+      "name": "S_AVGHOLD",
+      "kind": "scalar",
+      "captured_bytes": 2
+    },
+    {
+      "order": 7,
+      "name": "S_OPEN",
+      "kind": "scalar",
+      "captured_bytes": 1
+    },
+    {
+      "order": 8,
+      "name": "S_OPEN_NOTE",
+      "kind": "scalar",
+      "captured_bytes": 11
+    },
+    {
+      "order": 9,
+      "name": "OPEN_ROWS",
+      "kind": "region",
+      "captured_bytes": 912
+    },
+    {
+      "order": 10,
+      "name": "CLOSED_ROWS",
+      "kind": "region",
+      "captured_bytes": 5542
+    },
+    {
+      "order": 11,
+      "name": "BY_TIER",
+      "kind": "region",
+      "captured_bytes": 817
+    },
+    {
+      "order": 12,
+      "name": "S_INTEGRITY",
+      "kind": "scalar",
+      "captured_bytes": 53
+    }
+  ]
+}

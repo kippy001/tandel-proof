@@ -1,0 +1,23 @@
+{
+  "generator": "stage0-lock-template-v1.0",
+  "frozen_at": "2026-06-04T11:50:19.733402+00:00",
+  "source_file": "canonical_marked.html",
+  "source_sha256": "8395020444f7d0cc37b4412ccef4a290109214938a15fd44842b8f009b9b47ae",
+  "template_sha256": "5f5046fe38954068fbd85702e91b7c0bd7b4c12c2ac72a88ec5b481049567fb5",
+  "token_count": 13,
+  "tokens": [
+    "BUILD_META",
+    "S_CLOSED_REC",
+    "S_CLOSED_NOTE",
+    "S_HITRATE",
+    "S_NETEDGE_CLS",
+    "S_NETEDGE",
+    "S_AVGHOLD",
+    "S_OPEN",
+    "S_OPEN_NOTE",
+    "OPEN_ROWS",
+    "CLOSED_ROWS",
+    "BY_TIER",
+    "S_INTEGRITY"
+  ]
+}

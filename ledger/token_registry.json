@@ -1,0 +1,19 @@
+{
+  "_comment": "Stage 0 contract. Every dynamic region in the canonical scorecard is marked once with <!--TOKEN:NAME-->...<!--/TOKEN:NAME--> and collapsed to {{NAME}}. 'scalar' = single computed value injected inline; 'region' = variable-length markup block Stage 3 renders from rows. Everything NOT listed here stays frozen chrome (CSS, masthead prose, verification explainer, hash-anatomy, table headers, scoring rules, disclaimer, footer, JS).",
+  "_version": "stage0-registry-v1",
+  "tokens": [
+    { "name": "BUILD_META",   "kind": "scalar", "desc": "Masthead 'Last updated <date, time ET>' value." },
+    { "name": "S_CLOSED_REC", "kind": "scalar", "desc": "Closed record, e.g. '7\u20133' (wins\u2013losses)." },
+    { "name": "S_CLOSED_NOTE","kind": "scalar", "desc": "Closed-record note, e.g. '10 scored \u00b7 1 avoided'." },
+    { "name": "S_HITRATE",    "kind": "scalar", "desc": "Hit rate integer percent, e.g. '70'." },
+    { "name": "S_NETEDGE",    "kind": "scalar", "desc": "Net edge captured, e.g. '+1,025'." },
+    { "name": "S_NETEDGE_CLS","kind": "scalar", "desc": "Net-edge color class: 'pos' (green) when net edge \u2265 0, else 'neg' (red)." },
+    { "name": "S_AVGHOLD",    "kind": "scalar", "desc": "Avg hold in days, e.g. '13'." },
+    { "name": "S_OPEN",       "kind": "scalar", "desc": "Open-now count, e.g. '2'." },
+    { "name": "S_OPEN_NOTE",  "kind": "scalar", "desc": "Open-now note, e.g. 'NVDA \u00b7 SMH'." },
+    { "name": "OPEN_ROWS",    "kind": "region", "desc": "Open-positions <tbody> rows incl. drawer rows." },
+    { "name": "CLOSED_ROWS",  "kind": "region", "desc": "Closed-ledger <tbody> rows incl. drawer rows." },
+    { "name": "BY_TIER",      "kind": "region", "desc": "By-tier breakdown body (carries permanent caveat)." },
+    { "name": "S_INTEGRITY",  "kind": "scalar", "desc": "Footer hash-integrity coverage, e.g. '1 of 14 cryptographically verified \u00b7 13 illustrative'. Derived from per-row integrity.scheme over all rows." }
+  ]
+}

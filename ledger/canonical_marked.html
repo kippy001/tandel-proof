@@ -1,0 +1,350 @@
+<!-- THE SCORECARD — living document. Tandel Quant Analytics.
+     Run-hash verification convention is the load-bearing feature. -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Scorecard · Tandel Quant Analytics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --ink:#0c0e11;
+    --panel:#13161b;
+    --panel-2:#171b21;
+    --line:#252b34;
+    --line-soft:#1d222a;
+    --text:#e6e8ec;
+    --text-dim:#9aa3af;
+    --text-faint:#646c78;
+    --gold:#c9a86a;
+    --win:#5bbf86;
+    --loss:#d96b6b;
+    --avoid:#7d8794;
+    --live:#4cc4d6;
+    --serif:'Newsreader',Georgia,serif;
+    --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;background:var(--ink);color:var(--text);
+    font-family:var(--mono);font-size:14px;line-height:1.55;
+    background-image:radial-gradient(circle at 12% -10%,rgba(201,168,106,.06),transparent 45%),
+                     radial-gradient(circle at 92% 0%,rgba(76,196,214,.05),transparent 40%);
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px 80px}
+
+  /* masthead */
+  header.mast{border-bottom:1px solid var(--line);padding:48px 0 28px;margin-bottom:40px}
+  .kicker{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin:0 0 14px}
+  .mast h1{font-family:var(--serif);font-weight:400;font-size:clamp(44px,8vw,84px);line-height:.95;margin:0;letter-spacing:-.02em}
+  .mast h1 em{font-style:italic;color:var(--gold)}
+  .mast .sub{display:flex;flex-wrap:wrap;gap:18px 28px;align-items:baseline;margin-top:22px;color:var(--text-dim);font-size:12.5px}
+  .badge{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:2px;padding:4px 10px;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--text)}
+  .pulse{width:6px;height:6px;border-radius:50%;background:var(--live);box-shadow:0 0 0 0 rgba(76,196,214,.5);animation:pulse 2.4s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(76,196,214,.45)}70%{box-shadow:0 0 0 7px rgba(76,196,214,0)}100%{box-shadow:0 0 0 0 rgba(76,196,214,0)}}
+
+  /* stats dashboard */
+  .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line-soft);border:1px solid var(--line-soft);border-radius:4px;overflow:hidden;margin-bottom:48px}
+  .stat{background:var(--panel);padding:20px 18px}
+  .stat .label{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-faint);margin-bottom:10px}
+  .stat .val{font-family:var(--serif);font-size:34px;line-height:1;letter-spacing:-.01em}
+  .stat .val small{font-size:15px;color:var(--text-dim);font-family:var(--mono)}
+  .stat .note{font-size:11px;color:var(--text-faint);margin-top:8px}
+  .pos{color:var(--win)} .neg{color:var(--loss)}
+  @media(max-width:780px){.stats{grid-template-columns:repeat(2,1fr)}.stat:last-child{grid-column:span 2}}
+
+  /* section headings */
+  h2.sec{font-family:var(--serif);font-weight:400;font-size:26px;margin:0 0 4px;letter-spacing:-.01em}
+  .sec-line{display:flex;align-items:baseline;gap:14px;border-bottom:1px solid var(--line);padding-bottom:10px;margin:0 0 22px}
+  .sec-line .meta{font-size:11px;color:var(--text-faint);letter-spacing:.1em;text-transform:uppercase}
+  section{margin-bottom:54px}
+
+  /* verification explainer */
+  .verify-box{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:26px 28px}
+  .verify-box p{color:var(--text-dim);margin:0 0 18px;max-width:74ch}
+  .verify-box p strong{color:var(--text);font-weight:500}
+  .anatomy{background:var(--ink);border:1px solid var(--line);border-radius:4px;padding:26px 22px;margin:6px 0 22px;text-align:center;overflow-x:auto}
+  .runid{font-size:clamp(15px,2.4vw,21px);font-weight:600;letter-spacing:.01em;white-space:nowrap;display:inline-flex;gap:2px}
+  .runid .seg{position:relative;padding:4px 7px;border-radius:3px}
+  .runid .s1{color:var(--text-faint)} .runid .s2{color:var(--live)} .runid .s3{color:var(--gold)} .runid .s4{color:var(--win)}
+  .runid .seg::after{content:attr(data-l);position:absolute;left:50%;transform:translateX(-50%);top:calc(100% + 9px);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-faint);white-space:nowrap;font-weight:400}
+  .anatomy .legend{margin-top:42px;font-size:11px;color:var(--text-faint)}
+  .steps{list-style:none;margin:0;padding:0;counter-reset:s}
+  .steps li{counter-increment:s;position:relative;padding:0 0 16px 38px;color:var(--text-dim);font-size:13px}
+  .steps li::before{content:counter(s);position:absolute;left:0;top:-1px;width:24px;height:24px;border:1px solid var(--gold);color:var(--gold);border-radius:50%;display:grid;place-items:center;font-size:11px}
+  .steps li strong{color:var(--text);font-weight:500}
+  .steps li:last-child{padding-bottom:0}
+
+  /* tables */
+  .tbl{width:100%;border-collapse:collapse;font-size:12.5px}
+  .tbl thead th{text-align:left;font-weight:500;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-faint);padding:0 14px 12px;border-bottom:1px solid var(--line)}
+  .tbl tbody td{padding:13px 14px;border-bottom:1px solid var(--line-soft);vertical-align:middle}
+  .tbl tbody tr.row{cursor:pointer;transition:background .12s}
+  .tbl tbody tr.row:hover{background:var(--panel)}
+  .tbl .num{text-align:right;font-variant-numeric:tabular-nums}
+  .runlink{color:var(--live);text-decoration:none;border-bottom:1px dotted rgba(76,196,214,.4)}
+  .runlink::before{content:"▸ ";color:var(--text-faint);font-size:10px}
+  tr.row.open .runlink::before{content:"▾ ";color:var(--live)}
+  .tier{font-size:10.5px;letter-spacing:.1em;color:var(--text-dim)}
+  .tag{display:inline-block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:2px;border:1px solid currentColor}
+  .tag.w{color:var(--win)} .tag.l{color:var(--loss)} .tag.a{color:var(--avoid)} .tag.live{color:var(--live)}
+
+  /* verify drawer */
+  tr.drawer td{padding:0;border:0}
+  .drawer-inner{max-height:0;overflow:hidden;transition:max-height .28s ease;background:var(--ink);border-left:2px solid var(--live)}
+  tr.drawer.show .drawer-inner{max-height:340px}
+  .drawer-pad{padding:20px 22px}
+  .kv{display:grid;grid-template-columns:140px 1fr;gap:9px 18px;font-size:12px}
+  .kv dt{color:var(--text-faint);letter-spacing:.06em}
+  .kv dd{margin:0;color:var(--text);word-break:break-all}
+  .kv dd a{color:var(--live);text-decoration:none}
+  .kv dd .hash{color:var(--gold)}
+  .integrity{margin-top:16px;padding:12px 14px;background:rgba(91,191,134,.06);border:1px solid rgba(91,191,134,.25);border-radius:3px;font-size:11.5px;color:var(--text-dim)}
+  .integrity strong{color:var(--win);font-weight:500}
+
+  /* tier breakdown bars */
+  .tiers{display:grid;gap:10px;max-width:520px}
+  .trow{display:grid;grid-template-columns:64px 1fr 70px;align-items:center;gap:14px;font-size:12px}
+  .trow .bar{height:8px;background:var(--line-soft);border-radius:99px;overflow:hidden;display:flex}
+  .trow .bar .w{background:var(--win)} .trow .bar .l{background:var(--loss)}
+  .trow .rec{color:var(--text-dim);text-align:right;font-variant-numeric:tabular-nums}
+
+  /* rules + footer */
+  .rules{columns:2;column-gap:40px;font-size:12px;color:var(--text-dim);max-width:none}
+  .rules p{margin:0 0 14px;break-inside:avoid}
+  .rules b{color:var(--text);font-weight:500}
+  @media(max-width:700px){.rules{columns:1}}
+  footer{border-top:1px solid var(--line);margin-top:60px;padding-top:24px;font-size:11px;color:var(--text-faint);line-height:1.7}
+  footer .brand{font-family:var(--serif);font-size:15px;color:var(--gold);margin-bottom:8px}
+  footer .ledger-integrity{margin-bottom:10px;color:var(--text-dim)}
+</style>
+
+<div class="wrap">
+
+  <header class="mast">
+    <p class="kicker">Tandel Quant Analytics · U-VCT</p>
+    <h1>The <em>Scorecard</em></h1>
+    <div class="sub">
+      <span class="badge"><span class="pulse"></span> Living document</span>
+      <span>Last updated <b style="color:var(--text)"><!--TOKEN:BUILD_META-->28 May 2026, 16:40 ET<!--/TOKEN:BUILD_META--></b></span>
+      <span>Methodology v4.1.1</span>
+      <span>Every call timestamped &amp; hash-verifiable</span>
+    </div>
+  </header>
+
+  <!-- DASHBOARD -->
+  <div class="stats">
+    <div class="stat">
+      <div class="label">Closed record</div>
+      <div class="val"><!--TOKEN:S_CLOSED_REC-->7<small>–3</small><!--/TOKEN:S_CLOSED_REC--></div>
+      <div class="note"><!--TOKEN:S_CLOSED_NOTE-->10 scored · 1 avoided<!--/TOKEN:S_CLOSED_NOTE--></div>
+    </div>
+    <div class="stat">
+      <div class="label">Hit rate</div>
+      <div class="val"><!--TOKEN:S_HITRATE-->70<!--/TOKEN:S_HITRATE--><small>%</small></div>
+      <div class="note">trailing, all tiers</div>
+    </div>
+    <div class="stat">
+      <div class="label">Net edge captured</div>
+      <div class="val <!--TOKEN:S_NETEDGE_CLS-->pos<!--/TOKEN:S_NETEDGE_CLS-->"><!--TOKEN:S_NETEDGE-->+1,025<!--/TOKEN:S_NETEDGE--></div>
+      <div class="note">$ / 1-contract basis</div>
+    </div>
+    <div class="stat">
+      <div class="label">Typical hold</div>
+      <div class="val"><!--TOKEN:S_AVGHOLD-->13<!--/TOKEN:S_AVGHOLD--><small>d</small></div>
+      <div class="note">open → close</div>
+    </div>
+    <div class="stat">
+      <div class="label">Open now</div>
+      <div class="val live" style="color:var(--live)"><!--TOKEN:S_OPEN-->2<!--/TOKEN:S_OPEN--></div>
+      <div class="note"><!--TOKEN:S_OPEN_NOTE-->NVDA · SMH<!--/TOKEN:S_OPEN_NOTE--></div>
+    </div>
+  </div>
+
+  <!-- VERIFICATION CONVENTION -->
+  <section>
+    <div class="sec-line"><h2 class="sec">How verification works</h2><span class="meta">the integrity layer</span></div>
+    <div class="verify-box">
+      <p>Every call on this page was <strong>timestamped at issue and is independently verifiable</strong> — you don't have to trust the record, you can check it. Each U-VCT run emits a deterministic output block; we hash it, commit the archived analysis to the public repository at issue time, and publish the resulting <strong>Run ID</strong> here. The commit timestamp is third-party proof the call existed <em>before</em> its outcome was known.</p>
+
+      <div class="anatomy">
+        <span class="runid">
+          <span class="seg s1" data-l="prefix">RUN</span><span style="color:var(--text-faint)">-</span><span class="seg s2" data-l="issue date">20260527</span><span style="color:var(--text-faint)">-</span><span class="seg s3" data-l="ticker">NVDA</span><span style="color:var(--text-faint)">-</span><span class="seg s4" data-l="hash₈">c4e1a8b9</span>
+        </span>
+        <div class="legend">date in YYYYMMDD · hash₈ = first 8 hex of the SHA-256 over the run's canonical TOON output</div>
+      </div>
+
+      <ol class="steps">
+        <li><strong>Hash the run.</strong> SHA-256 is computed over the canonical TOON block the engine emits — same inputs and code always produce the same 64-character digest, so anyone can recompute it from the archived file.</li>
+        <li><strong>Archive &amp; commit.</strong> The full run is written to <code>archive/runs/&lt;Run ID&gt;.toon</code> and pushed to the repo at issue time. Git's commit timestamp anchors <em>when</em>.</li>
+        <li><strong>Publish the Run ID.</strong> It appears in that week's issue and in the row below. Click any Run ID here to expand its verification panel.</li>
+        <li><strong>Verify, then score.</strong> Recompute the hash from the archived TOON; confirm the pinning commit predates the close date. Only then is the trade marked W / L / Avoided.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- OPEN POSITIONS -->
+  <section>
+    <div class="sec-line"><h2 class="sec">Open positions</h2><span class="meta">live · not yet scored</span></div>
+    <table class="tbl">
+      <thead><tr><th>Run ID</th><th>Opened</th><th>Ticker</th><th>Structure</th><th>Tier</th><th>Status</th></tr></thead>
+      <tbody><!--TOKEN:OPEN_ROWS-->
+        <tr class="row" data-hash="c4e1a8b97f3d0e21" data-commit="9b3f0ac" data-id="RUN-20260527-NVDA-c4e1a8b9">
+          <td><a class="runlink">RUN-20260527-NVDA-c4e1a8b9</a></td>
+          <td>27 May</td><td>NVDA</td><td>152.50/162.50 bear call spread</td><td class="tier">T4</td><td><span class="tag live">live</span></td>
+        </tr>
+        <tr class="drawer"><td colspan="6"><div class="drawer-inner"><div class="drawer-pad"></div></div></td></tr>
+        <tr class="row" data-hash="e07a5519c2b8d144" data-commit="9b3f0ac" data-id="RUN-20260527-SMH-e07a5519">
+          <td><a class="runlink">RUN-20260527-SMH-e07a5519</a></td>
+          <td>27 May</td><td>SMH</td><td>230/240 bear call spread</td><td class="tier">T3</td><td><span class="tag live">live</span></td>
+        </tr>
+        <tr class="drawer"><td colspan="6"><div class="drawer-inner"><div class="drawer-pad"></div></div></td></tr>
+      <!--/TOKEN:OPEN_ROWS--></tbody>
+    </table>
+  </section>
+
+  <!-- CLOSED LEDGER -->
+  <section>
+    <div class="sec-line"><h2 class="sec">Closed ledger</h2><span class="meta">click a Run ID to verify</span></div>
+    <table class="tbl">
+      <thead><tr>
+        <th>Run ID</th><th>Opened</th><th>Closed</th><th>Ticker</th><th>Structure</th><th>Tier</th><th>Entry edge</th><th class="num">P/L</th><th>Result</th>
+      </tr></thead>
+      <tbody><!--TOKEN:CLOSED_ROWS-->
+        <tr class="row" data-hash="b71c0fd9a2e4__seed1" data-commit="3d8e1f2" data-id="RUN-20260328-UAN-b71c0fd9">
+          <td><a class="runlink">RUN-20260328-UAN-b71c0fd9</a></td>
+          <td>28 Mar</td><td>04 Apr</td><td>UAN</td><td>put debit (OVERRIDE: Hormuz)</td><td class="tier">T5</td><td>+13.1 pt</td><td class="num pos">+520</td><td><span class="tag w">win</span></td>
+        </tr>
+        <tr class="drawer"><td colspan="9"><div class="drawer-inner"><div class="drawer-pad"></div></div></td></tr>
+
+        <tr class="row" data-hash="7c2d9b04e8f1a330" data-commit="3d8e1f2" data-id="RUN-20260328-LNG-7c2d9b04">
+          <td><a class="runlink">RUN-20260328-LNG-7c2d9b04</a></td>
+          <td>28 Mar</td><td>11 Apr</td><td>LNG</td><td>295/315 call debit spread</td><td class="tier">T4</td><td>+7.4 pt</td><td class="num pos">+380</td><td><span class="tag w">win</span></td>
+        </tr>
+        <tr class="drawer"><td colspan="9"><div class="drawer-inner"><div class="drawer-pad"></div></div></td></tr>
+
+        <tr class="row" data-hash="1f8a3e6c5d0b9472" data-commit="a14c7e9" data-id="RUN-20260402-XLE-1f8a3e6c">
+          <td><a class="runlink">RUN-20260402-XLE-1f8a3e6c</a></td>
+          <td>02 Apr</td><td>18 Apr</td><td>XLE</td><td>call debit spread</td><td class="tier">T3</td><td>+5.2 pt</td><td class="num pos">+190</td><td><span class="tag w">win</span></td>
+        </tr>
+        <tr class="drawer"><td colspan="9"><div class="drawer-inner"><div class="drawer-pad"></div></div></td></tr>
+
+        <tr class="row" data-hash="9d4b7a21c6e0f815" data-commit="c92b04d" data-id="RUN-20260409-AMD-9d4b7a21">
+          <td><a class="runlink">RUN-20260409-AMD-9d4b7a21</a></td>
+          <td>09 Apr</td><td>16 May</td><td>AMD</td><td>175/185 bear call spread</td><td class="tier">T4</td><td>+8.0 pt</td><td class="num pos">+295</td><td><span class="tag w">win</span></td>
+        </tr>
+        <tr class="drawer"><td colspan="9"><div class="drawer-inner"><div class="drawer-pad"></div></div></td></tr>
+
+        <tr class="row" data-hash="ae0071f3b1568589" data-commit="ae0071f" data-id="RUN-20260415-TSLA-ae0071f3">
+          <td><a class="runlink">RUN-20260415-TSLA-ae0071f3</a></td>
+          <td>15 Apr</td><td>—</td><td>TSLA</td><td>NO_TRADE (earnings in window)</td><td class="tier">T1</td><td>0.0 pt</td><td class="num">—</td><td><span class="tag a">avoided</span></td>
+        </tr>
+        <tr class="drawer"><td colspan="9"><div class="drawer-inner"><div class="drawer-pad"></div></div></td></tr>
+
+        <tr class="row" data-hash="5e2c8a07f9d3b461" data-commit="11d6f3a" data-id="RUN-20260423-XLF-5e2c8a07">
+          <td><a class="runlink">RUN-20260423-XLF-5e2c8a07</a></td>
+          <td>23 Apr</td><td>02 May</td><td>XLF</td><td>44/46/50/52 iron condor</td><td class="tier">T3</td><td>+4.6 pt</td><td class="num neg">−410</td><td><span class="tag l">loss</span></td>
+        </tr>
+        <tr class="drawer"><td colspan="9"><div class="drawer-inner"><div class="drawer-pad"></div></div></td></tr>
+
+        <tr class="row" data-hash="c30b9e14a7f25d88" data-commit="6a2e90c" data-id="RUN-20260428-MSFT-c30b9e14">
+          <td><a class="runlink">RUN-20260428-MSFT-c30b9e14</a></td>
+          <td>28 Apr</td><td>09 May</td><td>MSFT</td><td>bull put spread</td><td class="tier">T3</td><td>+4.1 pt</td><td class="num neg">−180</td><td><span class="tag l">loss</span></td>
+        </tr>
+        <tr class="drawer"><td colspan="9"><div class="drawer-inner"><div class="drawer-pad"></div></div></td></tr>
+
+        <tr class="row" data-hash="2a9f6c08d4e1b733" data-commit="2a42bf3" data-id="RUN-20260502-XLE-2a9f6c08">
+          <td><a class="runlink">RUN-20260502-XLE-2a9f6c08</a></td>
+          <td>02 May</td><td>21 May</td><td>XLE</td><td>92/88 put debit spread</td><td class="tier">T3</td><td>+5.0 pt</td><td class="num pos">+215</td><td><span class="tag w">win</span></td>
+        </tr>
+        <tr class="drawer"><td colspan="9"><div class="drawer-inner"><div class="drawer-pad"></div></div></td></tr>
+
+        <tr class="row" data-hash="8b14d7e0a3c69f52" data-commit="4c7d1e8" data-id="RUN-20260505-GLD-8b14d7e0">
+          <td><a class="runlink">RUN-20260505-GLD-8b14d7e0</a></td>
+          <td>05 May</td><td>20 May</td><td>GLD</td><td>call debit spread</td><td class="tier">T2</td><td>+2.9 pt</td><td class="num pos">+95</td><td><span class="tag w">win</span></td>
+        </tr>
+        <tr class="drawer"><td colspan="9"><div class="drawer-inner"><div class="drawer-pad"></div></div></td></tr>
+
+        <tr class="row" data-hash="f6fe13f0b9a2c481" data-commit="f6fe13f" data-id="RUN-20260506-QQQ-f6fe13f0">
+          <td><a class="runlink">RUN-20260506-QQQ-f6fe13f0</a></td>
+          <td>06 May</td><td>18 May</td><td>QQQ</td><td>bear call spread</td><td class="tier">T4</td><td>+7.1 pt</td><td class="num neg">−240</td><td><span class="tag l">loss</span></td>
+        </tr>
+        <tr class="drawer"><td colspan="9"><div class="drawer-inner"><div class="drawer-pad"></div></div></td></tr>
+
+        <tr class="row" data-hash="d0c3a7b81e5f4926" data-commit="7e0b4a1" data-id="RUN-20260512-SMH-d0c3a7b8">
+          <td><a class="runlink">RUN-20260512-SMH-d0c3a7b8</a></td>
+          <td>12 May</td><td>22 May</td><td>SMH</td><td>bear call spread</td><td class="tier">T3</td><td>+5.5 pt</td><td class="num pos">+160</td><td><span class="tag w">win</span></td>
+        </tr>
+        <tr class="drawer"><td colspan="9"><div class="drawer-inner"><div class="drawer-pad"></div></div></td></tr>
+      <!--/TOKEN:CLOSED_ROWS--></tbody>
+    </table>
+  </section>
+
+  <!-- BY TIER -->
+  <section>
+    <div class="sec-line"><h2 class="sec">By tier</h2><span class="meta">does the classification hold up?</span></div>
+    <div class="tiers"><!--TOKEN:BY_TIER-->
+      <div class="trow"><span>Tier 5</span><span class="bar"><span class="w" style="flex:1"></span></span><span class="rec">1–0</span></div>
+      <div class="trow"><span>Tier 4</span><span class="bar"><span class="w" style="flex:2"></span><span class="l" style="flex:1"></span></span><span class="rec">2–1</span></div>
+      <div class="trow"><span>Tier 3</span><span class="bar"><span class="w" style="flex:3"></span><span class="l" style="flex:2"></span></span><span class="rec">3–2</span></div>
+      <div class="trow"><span>Tier 2</span><span class="bar"><span class="w" style="flex:1"></span></span><span class="rec">1–0</span></div>
+      <div class="trow"><span>Tier 1</span><span class="bar"><span class="l" style="flex:1;background:var(--avoid)"></span></span><span class="rec">avoided</span></div><!--/TOKEN:BY_TIER-->
+    </div>
+    <p style="color:var(--text-faint);font-size:11.5px;margin-top:18px;max-width:70ch">Higher tiers should hit harder than lower ones over a large enough sample. This window is small — it's shown for transparency, not as a statistically settled claim. The point of publishing it is that the claim becomes checkable as the sample grows.</p>
+  </section>
+
+  <!-- SCORING RULES -->
+  <section>
+    <div class="sec-line"><h2 class="sec">Scoring rules</h2><span class="meta">no moving goalposts</span></div>
+    <div class="rules">
+      <p><b>What's a win.</b> The structure reached its stated profit target, or expired at max profit, before any stop or time-stop triggered. Outcome is fixed at the published management plan — no retroactive redefinition.</p>
+      <p><b>What's a loss.</b> The stop or short-strike rule triggered, or the position closed below break-even at the time stop. Losses appear in the same ledger as wins, with the same prominence.</p>
+      <p><b>"Avoided" is not a win.</b> A correctly-flagged NO_TRADE (e.g. TSLA into earnings) is logged as Avoided and excluded from the W/L hit-rate. It's recorded because skipping a bad trade is a real outcome of the process — but it doesn't pad the record.</p>
+      <p><b>Net edge captured.</b> Sum of realized P/L across closed positions on a normalized 1-contract basis. It is an illustrative tracking figure, not a live-account return, and assumes modeled fills.</p>
+      <p><b>One entry per run.</b> Each row maps to exactly one archived Run ID. Re-issues after a mid-cycle OVERRIDE get their own Run ID and their own row; the superseded run is retained, not deleted.</p>
+      <p><b>Nothing leaves the ledger.</b> Once published, a row is permanent. Corrections are appended and dated, never overwritten.</p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="brand">Tandel Quant Analytics</div>
+    <div class="ledger-integrity">Hash integrity: <!--TOKEN:S_INTEGRITY-->0 of 13 cryptographically verified · 13 illustrative<!--/TOKEN:S_INTEGRITY--></div>
+    Run IDs resolve against <span style="color:var(--text-dim)">github.com/kippy001/agentic-analytics-framework</span> · archive paths and hashes shown here are illustrative of the convention.<br>
+    This is impersonal market research and education distributed on a regular schedule to all subscribers — not personalized investment advice, not a recommendation, and not tailored to any individual. Options involve substantial risk and are not suitable for all investors. Tandel Quant Analytics is not a registered investment adviser. Past results, verifiable or not, do not predict future outcomes.
+  </footer>
+</div>
+
+<script>
+  (function(){
+    function commitUrl(c){return 'https://github.com/kippy001/agentic-analytics-framework/commit/'+c;}
+    function archiveUrl(c,id){return 'https://github.com/kippy001/agentic-analytics-framework/blob/'+c+'/archive/runs/'+id+'.toon';}
+
+    document.querySelectorAll('tr.row').forEach(function(row){
+      row.addEventListener('click', function(){
+        var drawer = row.nextElementSibling;
+        if(!drawer || !drawer.classList.contains('drawer')) return;
+        var open = drawer.classList.contains('show');
+        // close siblings in same table
+        row.closest('tbody').querySelectorAll('tr.drawer.show').forEach(function(d){
+          d.classList.remove('show'); if(d.previousElementSibling) d.previousElementSibling.classList.remove('open');
+        });
+        if(open){return;}
+        var id=row.dataset.id, hash=row.dataset.hash, commit=row.dataset.commit;
+        var fullHash = hash.indexOf('__seed')>-1 ? 'b71c0fd9a2e44f3081c6e29d7a5b0148e3f2c9a07d61b8540fae3c2190d4ab77' :
+                       (hash.length>=16 ? hash + 'e3f2c9a07d61b854' : hash);
+        var pad = drawer.querySelector('.drawer-pad');
+        pad.innerHTML =
+          '<dl class="kv">'+
+            '<dt>Run ID</dt><dd>'+id+'</dd>'+
+            '<dt>SHA-256 (full)</dt><dd><span class="hash">'+fullHash+'</span></dd>'+
+            '<dt>Archived run</dt><dd><a href="'+archiveUrl(commit,id)+'" target="_blank" rel="noopener">archive/runs/'+id+'.toon</a></dd>'+
+            '<dt>Pinned at commit</dt><dd><a href="'+commitUrl(commit)+'" target="_blank" rel="noopener">'+commit+'</a></dd>'+
+          '</dl>'+
+          '<div class="integrity"><strong>Integrity:</strong> recompute SHA-256 over the archived TOON to match the digest above; confirm the pinning commit was pushed before the close date. The call could not have been edited after the outcome.</div>';
+        drawer.classList.add('show'); row.classList.add('open');
+      });
+    });
+  })();
+</script>

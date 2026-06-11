@@ -1,0 +1,48 @@
+<!-- THE SCORECARD — fixture mirroring recovered structure. Static chrome is illustrative; sentinels mark dynamic regions. -->
+<style>
+  :root{--gold:#b8893a;--text:#e8e4dc;--live:#3a9}
+  .stats{display:grid} footer .brand{font-family:var(--serif)}
+</style>
+<div class="wrap">
+  <header class="mast">
+    <p class="kicker">Tandel Quant Analytics · U-VCT</p>
+    <h1>The <em>Scorecard</em></h1>
+    <div class="sub">
+      <span class="badge"><span class="pulse"></span> Living document</span>
+      <span>Last updated <b style="color:var(--text)"><!--TOKEN:BUILD_META-->28 May 2026, 16:40 ET<!--/TOKEN:BUILD_META--></b></span>
+      <span>Methodology v4.1.1</span>
+    </div>
+  </header>
+
+  <!-- DASHBOARD -->
+  <div class="stats">
+    <div class="stat"><div class="label">Closed record</div><div class="val"><!--TOKEN:S_CLOSED_REC-->7<small>–3</small><!--/TOKEN:S_CLOSED_REC--></div><div class="note"><!--TOKEN:S_CLOSED_NOTE-->10 scored · 1 avoided<!--/TOKEN:S_CLOSED_NOTE--></div></div>
+    <div class="stat"><div class="label">Hit rate</div><div class="val"><!--TOKEN:S_HITRATE-->70<!--/TOKEN:S_HITRATE--><small>%</small></div><div class="note">trailing, all tiers</div></div>
+    <div class="stat"><div class="label">Net edge captured</div><div class="val <!--TOKEN:S_NETEDGE_CLS-->pos<!--/TOKEN:S_NETEDGE_CLS-->"><!--TOKEN:S_NETEDGE-->+1,025<!--/TOKEN:S_NETEDGE--></div><div class="note">$ / 1-contract basis</div></div>
+    <div class="stat"><div class="label">Avg hold</div><div class="val"><!--TOKEN:S_AVGHOLD-->13<!--/TOKEN:S_AVGHOLD--><small>d</small></div><div class="note">open → close</div></div>
+    <div class="stat"><div class="label">Open now</div><div class="val live"><!--TOKEN:S_OPEN-->2<!--/TOKEN:S_OPEN--></div><div class="note"><!--TOKEN:S_OPEN_NOTE-->NVDA · SMH<!--/TOKEN:S_OPEN_NOTE--></div></div>
+  </div>
+
+  <!-- OPEN POSITIONS (header frozen; rows dynamic) -->
+  <section><table class="tbl"><thead><tr><th>Run ID</th><th>Opened</th><th>Ticker</th><th>Structure</th><th>Tier</th><th>Status</th></tr></thead>
+    <tbody><!--TOKEN:OPEN_ROWS-->
+      <tr class="row" data-id="RUN-20260527-NVDA-c4e1a8b9"><td>RUN-20260527-NVDA-c4e1a8b9</td><td>27 May</td><td>NVDA</td><td>152.50/162.50 bear call</td><td>T4</td><td>live</td></tr>
+    <!--/TOKEN:OPEN_ROWS--></tbody></table></section>
+
+  <!-- CLOSED LEDGER (header frozen; rows dynamic) -->
+  <section><table class="tbl"><thead><tr><th>Run ID</th><th>Opened</th><th>Closed</th><th>Ticker</th><th>P/L</th><th>Result</th></tr></thead>
+    <tbody><!--TOKEN:CLOSED_ROWS-->
+      <tr class="row" data-id="RUN-20260328-UAN-b71c0fd9"><td>RUN-20260328-UAN-b71c0fd9</td><td>28 Mar</td><td>04 Apr</td><td>UAN</td><td>+520</td><td>win</td></tr>
+    <!--/TOKEN:CLOSED_ROWS--></tbody></table></section>
+
+  <!-- BY TIER -->
+  <section><h2>By tier</h2><div class="bytier"><!--TOKEN:BY_TIER-->
+    <div class="tier-row">T4 · 3–1 · caveat: sample too small to claim tier-ordering</div>
+  <!--/TOKEN:BY_TIER--></div></section>
+
+  <!-- SCORING RULES (frozen chrome) -->
+  <section><h2>Scoring rules</h2><p>Win/loss fixed at the published management plan. Avoided logged, excluded from hit-rate.</p></section>
+
+  <footer><div class="brand">Tandel Quant Analytics</div><div>Hash integrity: <!--TOKEN:S_INTEGRITY-->0 of 13 cryptographically verified · 13 illustrative<!--/TOKEN:S_INTEGRITY--></div></footer>
+</div>
+<script>/* drawer toggle — frozen */ document.querySelectorAll('.row').forEach(r=>r.addEventListener('click',()=>{}));</script>
