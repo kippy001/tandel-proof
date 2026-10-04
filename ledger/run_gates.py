@@ -42,7 +42,7 @@ GATES = [
     ("stage2 reconcile",   ["stage2_derive.py", SEED_FIXTURE],        "RECONCILE OK"),
     ("verify_roundtrip",   ["verify_roundtrip.py"],                   "ROUND-TRIP LOSSLESS"),
     ("stage3 seed render", ["stage3_render.py", SEED_FIXTURE],        "STAGE 3 LOSSLESS"),
-    ("stage3 tests",       ["tests/test_stage3.py"],                  "23 passed, 0 failed"),
+    ("stage3 tests",       ["tests/test_stage3.py"],                  "30 passed, 0 failed"),
     ("canon tests",        ["tests/test_canonicalize_toon.py"],       "9 passed, 0 failed"),
     ("toon serializer",    ["tests/test_uvct_toon_serializer.py"],    "8 passed, 0 failed"),
     # --- live-ledger soundness (runs against the growing ledger.json) -------
@@ -54,6 +54,9 @@ GATES = [
     # identity is NOT asserted; rc==0 iff the render succeeds (marker=None).
     ("stage3 live render", ["stage3_render.py", "ledger.json",
                             "--build-meta", "live-smoke"],            None),
+    # §23.82: the PUBLIC page is the verified-only render; prove it renders too.
+    ("stage3 public render", ["stage3_render.py", "ledger.json", "--verified-only",
+                              "--build-meta", "live-smoke"],          None),
 ]
 
 

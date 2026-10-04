@@ -95,17 +95,30 @@ def fmt_edge(pt: float) -> str:
     return f"{pt:.1f} pt"
 
 
-def fmt_integrity(verified: int, illustrative: int, total: int) -> str:
+# \u00a723.82: the date the illustrative seed rows left the public page.
+WITHDRAWN_ON = "4 Oct 2026"
+
+
+def fmt_integrity(verified: int, illustrative: int, total: int, withdrawn: int = 0) -> str:
     """Footer hash-integrity coverage line. Pure presentation.
 
     '1 of 14 cryptographically verified \u00b7 13 illustrative'. The illustrative
     clause is dropped once every row is verified; an empty ledger is stated plainly.
+    With rows withdrawn from display (verified-only render), the correction is
+    stated with its date -- the page's own rule is that corrections are appended
+    and dated.
     """
     if total == 0:
-        return "no calls recorded yet"
-    line = f"{verified} of {total} cryptographically verified"
+        line = "no calls recorded yet"
+    else:
+        line = f"{verified} of {total} cryptographically verified"
     if illustrative:
         line += f" {MIDDOT} {illustrative} illustrative"
+    if withdrawn:
+        line += (f" {MIDDOT} correction, {WITHDRAWN_ON}: {withdrawn} illustrative seed rows "
+                 f"(design placeholders, never calls) were shown here and counted in the "
+                 f"record above until this date; they are withdrawn from this page and "
+                 f"remain in ledger.json")
     return line
 
 
@@ -192,35 +205,43 @@ def build_tokens(stats: dict, build_meta: str) -> dict[str, str]:
     by_tier_region = render_by_tier(stats["by_tier"])
 
     open_note = f" {MIDDOT} ".join(stats["open_tickers"])
+    # §23.82: with nothing scored there is no hit rate, edge or hold -- a 0 would
+    # read as a measured zero. The seed design always has scored rows.
+    scored = stats["scored"] > 0
 
     return {
         "BUILD_META": build_meta,
         "S_CLOSED_REC": f'{stats["wins"]}<small>{EN_DASH}{stats["losses"]}</small>',
         "S_CLOSED_NOTE": f'{stats["scored"]} scored {MIDDOT} {stats["avoided"]} avoided',
-        "S_HITRATE": str(stats["hit_rate_pct"]),
+        "S_HITRATE": str(stats["hit_rate_pct"]) if scored else EM_DASH,
         "S_NETEDGE_CLS": stats["net_edge_cls"],
-        "S_NETEDGE": fmt_signed_int(stats["net_edge"]),
-        "S_AVGHOLD": str(stats["median_hold_days"]),
+        "S_NETEDGE": fmt_signed_int(stats["net_edge"]) if scored else EM_DASH,
+        "S_AVGHOLD": str(stats["median_hold_days"]) if scored else EM_DASH,
         "S_OPEN": str(stats["open_count"]),
         "S_OPEN_NOTE": open_note,
         "OPEN_ROWS": open_region,
         "CLOSED_ROWS": closed_region,
         "BY_TIER": by_tier_region,
         "S_INTEGRITY": fmt_integrity(
-            stats["verified_count"], stats["illustrative_count"], stats["integrity_total"]
+            stats["verified_count"], stats["illustrative_count"], stats["integrity_total"],
+            stats.get("withdrawn_count", 0),
         ),
     }
 
 
-def render(ledger: dict, build_meta: str = FROZEN_BUILD_META) -> str:
+def render(ledger: dict, build_meta: str = FROZEN_BUILD_META,
+           verified_only: bool = False) -> str:
     """Render the full Scorecard HTML. Pure function of (ledger, build_meta).
+
+    verified_only=True is the PUBLIC render (§23.82): only toon-sha256-v1 rows
+    are shown or counted. The default reproduces the signed-off seed design.
 
     Works for ANY valid ledger -- appending a row and re-rendering is the
     intended weekly workflow. The reconcile-to-frozen check is a regression
     assertion for the SEED ledger and lives in the round-trip proof (main),
     not here; gating render on it would freeze the page to the seed forever.
     """
-    stats = derive(ledger)
+    stats = derive(ledger, verified_only=verified_only)
     tokens = build_tokens(stats, build_meta)
     page = TEMPLATE.read_text(encoding="utf-8")
     for name, value in tokens.items():
@@ -242,6 +263,8 @@ def main(argv: list[str]) -> int:
                     help="'Last updated' value (default: the frozen canonical value).")
     ap.add_argument("--out", default=None,
                     help="write the rendered page to this path.")
+    ap.add_argument("--verified-only", action="store_true",
+                    help="the public render: show and count toon-sha256-v1 rows only (§23.82).")
     args = ap.parse_args(argv[1:])
 
     data = load_ledger(args.ledger)
@@ -253,7 +276,7 @@ def main(argv: list[str]) -> int:
             print(f"  - {e}", file=sys.stderr)
         return 2
 
-    page = render(data, args.build_meta)
+    page = render(data, args.build_meta, verified_only=args.verified_only)
 
     if args.out:
         Path(args.out).write_text(page, encoding="utf-8", newline="")

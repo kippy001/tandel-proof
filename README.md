@@ -35,9 +35,16 @@ includes a ~15-line independent verifier you can write yourself.
 | `ledger/stage*.py`, `ledger/build/` | The full render pipeline + frozen template (SHA-256s pinned in `build/freeze_manifest.json`) |
 | `VERIFICATION.md` | The spec: canonicalization profile, DIY verifier, what verification proves and doesn't |
 
-Rows stamped `v0` are **illustrative seed data** — labeled as such on the scorecard,
-excluded from verification, never counted as track record. Only `toon-sha256-v1`
-rows are claims.
+Rows stamped `v0` are **illustrative seed data** — excluded from verification and from
+the scorecard. Only `toon-sha256-v1` rows are claims.
+
+> **Correction, 4 Oct 2026.** Until this date the scorecard showed 13 `v0` rows — a 7–3 closed
+> record, a 70% hit rate, +1,025 net edge and two "live" positions from 27 May — and counted them in
+> its headline numbers, under a heading that said every call was verifiable. They were illustrative
+> seed placeholders from the page's design, **never calls**. The scorecard now shows and counts
+> `toon-sha256-v1` rows only (`stage3_render.py --verified-only`); the 13 rows remain in
+> `ledger/ledger.json`, unedited, because nothing leaves the ledger. The verified record today is one
+> row: MU, 30 May 2026, NO_TRADE (avoided).
 
 ## What this proves — and what it doesn't
 

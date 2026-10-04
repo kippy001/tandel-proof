@@ -59,12 +59,24 @@ def hold_days(row: dict) -> int:
     return (_d(row["closed"]) - _d(row["opened"])).days
 
 
-def derive(ledger: dict) -> dict:
+def derive(ledger: dict, verified_only: bool = False) -> dict:
     """Compute all derived stats + the ordered row sets Stage 3 will render.
 
     Returns semantic data only. Stage 3 owns all presentation.
+
+    verified_only (§23.82): the PUBLIC page derives everything from
+    toon-sha256-v1 rows alone. Until 2026-10-04 it counted the 13 illustrative
+    seed rows as a 7-3 record, a 70% hit rate and +1,025 under a masthead
+    saying every call was verifiable. The rows stay in ledger.json (append-only);
+    they are withdrawn from display and counted in `withdrawn_count`. The
+    default (False) keeps reproducing the signed-off seed design for the
+    generator-correctness gates.
     """
     rows = ledger["rows"]
+    withdrawn = 0
+    if verified_only:
+        withdrawn = sum(1 for r in rows if r["integrity"]["scheme"] != "toon-sha256-v1")
+        rows = [r for r in rows if r["integrity"]["scheme"] == "toon-sha256-v1"]
     open_rows = [r for r in rows if r["state"] == "open"]
     closed = [r for r in rows if r["state"] == "closed"]
     scored = [r for r in closed if r["result"] in ("win", "loss")]
@@ -111,6 +123,7 @@ def derive(ledger: dict) -> dict:
         "verified_count": verified,
         "illustrative_count": illustrative,
         "integrity_total": len(rows),
+        "withdrawn_count": withdrawn,
         # region row sets (already chronological from append-only ledger)
         "open_rows": open_rows,
         "closed_rows": closed,

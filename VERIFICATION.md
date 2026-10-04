@@ -20,9 +20,9 @@ For every engine run, three artifacts:
    `ledger.json` by a frozen template (SHA-256s pinned in `ledger/build/freeze_manifest.json`).
    The page cannot say anything the data doesn't.
 
-Rows stamped `v0` are **illustrative seed data** — labeled as such on the page,
-excluded from verification, and never counted as track record. Only
-`toon-sha256-v1` rows are claims.
+Rows stamped `v0` are **illustrative seed data** — excluded from verification and, since
+4 Oct 2026, from the page (see the correction in README.md). Only `toon-sha256-v1` rows
+are claims.
 
 ## The hash (scheme `toon-sha256-v1`)
 
